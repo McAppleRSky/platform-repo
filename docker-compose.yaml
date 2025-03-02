@@ -1,0 +1,34 @@
+version: '3'
+services:
+  db:
+    image: 16.8-alpine3.21
+    container_name: platform-repo
+    restart: unless-stopped
+#    env_file: .env
+  environment:
+    POSTGRES_USER_FILE: /run/secrets/.username
+    POSTGRES_PASSWORD_FILE: /run/secrets/.password
+    POSTGRES_DB_FILE: /run/secrets/.dbname
+    volumes:
+      - platform-repo:/var/lib/postgresql/data/pgdata
+#    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - platform-network
+  secrets:
+    - username
+    - password
+    - dbname
+volumes:
+  # certbot-etc:
+#  wordpress:
+  platform-repo:
+networks:
+  platform-network:
+    driver: bridge
+secrets:
+  user:
+    file: .username
+  pass:
+    file: .password
+  db:
+    file: .dbname
